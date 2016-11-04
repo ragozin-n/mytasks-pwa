@@ -1,7 +1,25 @@
-$font-stack: Helvetica, sans-serif;
-$primary-color: #333;
+$body-bg: transparent;
 
 body {
-  font: 100% $font-stack;
-  color: $primary-color;
+  font: 100% Helvetica, sans-serif;
+  background-image: url("/static/bg.jpg");
+}
+
+.panel-info {
+    margin-top: 15%;
+    min-width: 200px;
+    opacity: 0.92;
+    text-align: center;
+}
+
+.user-password {
+    margin-top: 15px;
+}
+
+.btn-primary {
+    margin-top: 25px;
+}
+
+.nopadding {
+   padding: 0 !important;
 }

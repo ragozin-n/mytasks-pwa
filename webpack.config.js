@@ -2,8 +2,9 @@ var webpack = require('webpack');
 var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-var BUILD_DIR = path.resolve(__dirname, 'src/client/public');
+var BUILD_DIR = path.resolve(__dirname, 'src/server/static');
 var APP_DIR = path.resolve(__dirname, 'src/client/app');
+var BOWER = path.resolve(__dirname, 'bower_components');
 
 var config = {
   entry: {
@@ -16,7 +17,10 @@ var config = {
     library: '[name]'
   },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx'],
+    alias: {
+      bower: path.join(__dirname, 'bower_components') 
+   }
   },
   devtool: '#cheap-module-source-map',
   module : {
@@ -27,23 +31,23 @@ var config = {
         loader : 'babel'
       },
       {
-        test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!resolve-url!sass-loader?sourceMap')
-      },
-      {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
       },
       {
-        test: /\.woff2?$|\.ttf$|\.eot$|\.svg$|\.png|\.jpe?g|\.gif$/,
-        loader: 'file-loader'
+       test: /\.scss$/,
+       exclude: /node_modules/,
+       loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader"),
+         root: path.resolve('./node/static/sass')
+     },
+     {
+       test: /\.(jpe?g|gif|png)$/,
+       loader: 'file-loader?emitFile=false&name=[path][name].[ext]'
       }
     ],
   },
   plugins: [
-      new ExtractTextPlugin('styles.css', {
-          allChunks: true
-      })
+      new ExtractTextPlugin('styles.css')
   ]
 };
 
