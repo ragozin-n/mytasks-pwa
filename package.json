@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack -d --watch",
     "server": "webpack-dev-server --progress --colors",
-    "build": "webpack -p"
+    "build": "webpack -p",
+    "update_server_req": "src/server/bin/pip freeze > src/server/requirements.txt",
+    "create_jsx": ""
   },
   "repository": {
     "type": "git",
@@ -20,8 +22,11 @@
   },
   "homepage": "https://github.com/ragozin-n/mytasks-pwa#readme",
   "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
+    "react-render": "^1.1.0",
     "redux": "^3.6.0"
   },
   "devDependencies": {

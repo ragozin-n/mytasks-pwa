@@ -3,4 +3,5 @@ bower_components/*
 #Build directory:
 src/server/*
 !src/server/requirements.txt
+!src/server/templates/
 src/client/public/*

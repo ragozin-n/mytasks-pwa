@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% block head %}
+	<title>{% block title %}Приручаем Python и React{% endblock %}</title>
+	{% endblock %}
+</head>
+<body>
+	{% block body %}
+	<div class="root">
+		{{ rendered }}
+	</div>
+	{% endblock %}
+</body>
+</html>

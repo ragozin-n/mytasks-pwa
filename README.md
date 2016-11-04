@@ -20,7 +20,12 @@
 -	Попробую выгрузить на Heroku
 
 ### Usage (on 04.11.2016):
+Из-за Pyramid рендерить React логичней на сервере, поэтому для начала надо запустить render сервер на node, а потом наш python app.
+Поэтому делаем две вкладки, в одной крутится express через:
 ```
-npm i && npm run build
+node src/render_server.js 
 ```
-and open [this url](http://localhost:8080/src)
+Во второй:
+```
+cd src && server/bin/python app.py
+```
