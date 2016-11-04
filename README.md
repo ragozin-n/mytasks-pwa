@@ -21,6 +21,6 @@
 
 ### Usage (on 04.11.2016):
 ```
-npm run build
+npm i && npm run build
 ```
-and open localhost:8080/src
+and open [this url](http://localhost:8080/src)
