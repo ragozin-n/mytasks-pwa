@@ -1,3 +1,5 @@
-node_modules
+node_modules/*
 #Build directory:
-src/client/public
+src/server/*
+!src/server/requirements.txt
+src/client/public/*
