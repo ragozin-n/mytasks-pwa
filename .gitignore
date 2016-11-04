@@ -1,4 +1,5 @@
 node_modules/*
+bower_components/*
 #Build directory:
 src/server/*
 !src/server/requirements.txt

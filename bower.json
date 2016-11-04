@@ -1,0 +1,19 @@
+{
+  "name": "mytasks-pwa",
+  "description": "",
+  "main": "app.js",
+  "authors": [
+    "Ragozin N.A."
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/ragozin-n/mytasks-pwa",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "Boostrap Grid": "bootstrap-grid-css#*"
+  }
+}
