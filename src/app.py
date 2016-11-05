@@ -13,7 +13,11 @@ def IndexPage(request):
         to_static_markup=False
     )
 
-    return Response(env.get_template('index.html').render(rendered=rendered,css=request.static_url('server/static/styles.css')));
+    if request.method == 'POST':
+        print(request.POST.getall('login'));
+        print(request.POST.getall('password'));
+
+    return Response(env.get_template('index.html').render(rendered=rendered,css=request.static_url('server/static/main.css')));
 
 
 if __name__ == '__main__':

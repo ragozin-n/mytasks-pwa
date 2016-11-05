@@ -9,16 +9,16 @@ class App extends React.Component {
               <h3 className="panel-title">Авторизация</h3>
             </div>
             <div className="panel-body">
-              <form method="post" name="auth" autocomplete="off">
+              <form action="/" method="post" name="auth" autocomplete="off">
                 <div className="user-login">
                  <label for="login">Логин:</label>
                  <br/>
-                  <input type="text" id="login"/>
+                  <input type="text" name="login" id="login"/>
                 </div>
                  <div className="user-password">
                   <label for="login">Пароль:</label>
                   <br/>
-                  <input type="password" id="password"/>
+                  <input type="password" name="password" id="password"/>
                 </div>
                   <button type="submit" className="btn btn-primary">
                       Войти
