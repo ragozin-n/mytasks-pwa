@@ -1,13 +1,11 @@
 CREATE TABLE Users (
-id serial NOT NULL DEFAULT '0',
-username char(30) NOT NULL UNIQUE DEFAULT '0',
-password chkpass NOT NULL,
+id serial,
+username char(30) NOT NULL UNIQUE,
+password char(30) NOT NULL,
 CONSTRAINT Users_pk PRIMARY KEY (id)
 ) WITH (
   OIDS=FALSE
 );
-
-
 
 CREATE TABLE Posts (
 username char(30) NOT NULL,
@@ -17,8 +15,4 @@ isDone bool NOT NULL
   OIDS=FALSE
 );
 
-
-
-
 ALTER TABLE Posts ADD CONSTRAINT Posts_fk0 FOREIGN KEY (username) REFERENCES Users(username);
-

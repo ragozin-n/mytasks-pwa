@@ -4,6 +4,7 @@ from pyramid.config import Configurator
 from pyramid.response import Response
 from jinja2 import FileSystemLoader, Environment
 from react.render import render_component
+from sqlalchemy import Table, MetaData, create_engine
 
 env = Environment(loader=FileSystemLoader('server/templates'))
 
@@ -21,6 +22,10 @@ def IndexPage(request):
 
 
 if __name__ == '__main__':
+
+    # Postgres.app on 5432 sharing pwa_db
+    engine = create_engine("postgresql://localhost:5432/pwa_db")
+
     config = Configurator()
     config.add_static_view('static', 'server/static')
 
