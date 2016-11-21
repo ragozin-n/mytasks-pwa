@@ -8,41 +8,46 @@ var sass = require('gulp-sass');
 var connect = require('gulp-connect');
 
 gulp.task('sass', function () {
-  return gulp.src('src/client/app/*.scss')
-    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-    .pipe(gulp.dest('src/server/static/'))
-    .pipe(connect.reload());
+    return gulp
+        .src('src/client/app/*.scss')
+        .pipe(concat('main.scss'))
+        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+        .pipe(gulp.dest('src/server/static'))
+        .pipe(connect.reload());
 });
 
 gulp.task("babel", function(){
-    return gulp.src("src/client/app/*.jsx")
+    return gulp
+        .src("src/client/app/*.jsx")
     	.pipe(babel())
-    	.pipe(gulp.dest("src/server/static/"))
+    	.pipe(gulp.dest('src/server/static/'))
     	.pipe(connect.reload());
 });
 
 gulp.task('images', function() {
-    return gulp.src('src/client/app/*.jpg')
+    return gulp
+        .src('src/client/app/*.jpg')
         .pipe(imagemin())
         .pipe(gulp.dest('src/server/static'));
 });
 
-gulp.task('http-server', function() {
-	connect.server({
-	  port: 8888,
-	  livereload: true
-	});
+gulp.task('css_bower', function(){
+    return gulp.src(['src/server/static/*.css','bower_components/bootstrap/dist/css/bootstrap.min.css'])
+        .pipe(concat('main.css'))
+        .pipe(gulp.dest('src/server/static'));
+})
 
-    console.log('Server listening on http://localhost:8888');
+gulp.task('build', function(){
+    gulp.run('sass');
+    gulp.run('css_bower');
+    gulp.run('babel');
+    gulp.run('images');
 });
 
 gulp.task('watch', function() {
-    gulp.run('sass');
-    gulp.run('babel');
-    gulp.run('images');
-    gulp.watch('src/client/app/*.scss', ['sass']);
+    gulp.run('build');
+    gulp.watch('src/client/app/*.scss', ['sass', 'css_bower']);
     gulp.watch('src/client/app/*jsx', ['babel']);
-    gulp.run('http-server');
 });
 
 gulp.task('default', ['watch']);
