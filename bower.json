@@ -10,7 +10,8 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components"
+    "bower_components",
+    "db_info"
   ],
   "dependencies": {
     "jquery": "^3.1.1",
