@@ -5,15 +5,14 @@ var babel = require('gulp-babel');
 var concat = require('gulp-concat'); 
 var imagemin = require('gulp-imagemin');
 var sass = require('gulp-sass');
-var connect = require('gulp-connect');
+var clean = require('gulp-clean');
 
-gulp.task('sass', function () {
+gulp.task('sass', ['clean'], function () {
     return gulp
         .src('src/client/app/*.scss')
         .pipe(concat('main.scss'))
         .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
         .pipe(gulp.dest('src/server/static'))
-        .pipe(connect.reload());
 });
 
 gulp.task("babel", function(){
@@ -21,7 +20,6 @@ gulp.task("babel", function(){
         .src("src/client/app/*.jsx")
     	.pipe(babel())
     	.pipe(gulp.dest('src/server/static/'))
-    	.pipe(connect.reload());
 });
 
 gulp.task('images', function() {
@@ -31,22 +29,34 @@ gulp.task('images', function() {
         .pipe(gulp.dest('src/server/static'));
 });
 
-gulp.task('css_bower', function(){
+gulp.task('bower', ['sass'], function(){
     return gulp.src(['src/server/static/*.css','bower_components/bootstrap/dist/css/bootstrap.min.css'])
         .pipe(concat('main.css'))
         .pipe(gulp.dest('src/server/static'));
 })
 
 gulp.task('build', function(){
+    gulp.run('clean');
     gulp.run('sass');
-    gulp.run('css_bower');
+    gulp.run('bower');
     gulp.run('babel');
     gulp.run('images');
 });
 
+gulp.task('clean', function(){
+    return gulp.src('src/server/static/*.css', {read:false})
+        .pipe(clean())
+})
+
+gulp.task('styles', function(){
+    gulp.run('clean');
+    gulp.run('sass');
+    gulp.run('bower');
+});
+
 gulp.task('watch', function() {
-    gulp.run('build');
-    gulp.watch('src/client/app/*.scss', ['sass', 'css_bower']);
+    //gulp.run('build');
+    gulp.watch('src/client/app/*.scss', ['styles']);
     gulp.watch('src/client/app/*jsx', ['babel']);
 });
 
