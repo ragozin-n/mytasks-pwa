@@ -3,6 +3,9 @@ $body-bg: transparent;
 body {
   font: 100% Helvetica, sans-serif;
   background-image: url("/static/bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .panel-info {
@@ -12,12 +15,15 @@ body {
     text-align: center;
 }
 
-.user-password {
-    margin-top: 15px;
+.reg {
+	position: absolute;
+	display: block;
+	right: 0px;
+	margin-left: 5px;
 }
 
-.btn-primary {
-    margin-top: 25px;
+.card {
+	position: relative;
 }
 
 .nopadding {

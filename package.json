@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node_modules/.bin/gulp build",
-    "reqs": "src/server/bin/pip freeze > src/server/requirements.txt"
+    "reqs": "src/server/bin/pip freeze > src/server/requirements.txt",
+    "start":"cd src;node render_server.js & server/bin/python app.py"
   },
   "repository": {
     "type": "git",

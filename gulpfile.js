@@ -30,7 +30,7 @@ gulp.task('images', function() {
 });
 
 gulp.task('bower', ['sass'], function(){
-    return gulp.src(['src/server/static/*.css','bower_components/bootstrap/dist/css/bootstrap.min.css'])
+    return gulp.src(['src/server/static/*.css','bower_components/materialize/dist/css/materialize.min.css'])
         .pipe(concat('main.css'))
         .pipe(gulp.dest('src/server/static'));
 })
