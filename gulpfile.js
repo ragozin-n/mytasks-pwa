@@ -6,6 +6,8 @@ var concat = require('gulp-concat');
 var imagemin = require('gulp-imagemin');
 var sass = require('gulp-sass');
 var clean = require('gulp-clean');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
 
 gulp.task('sass', ['clean'], function () {
     return gulp
@@ -39,7 +41,7 @@ gulp.task('build', function(){
     gulp.run('clean');
     gulp.run('sass');
     gulp.run('bower');
-    gulp.run('babel');
+    // gulp.run('babel');
     gulp.run('images');
 });
 
@@ -54,10 +56,18 @@ gulp.task('styles', function(){
     gulp.run('bower');
 });
 
+gulp.task('browserify', function() {
+    return browserify('src/client/app/scripts.js')
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(gulp.dest('src/server/static'));
+});
+
 gulp.task('watch', function() {
-    //gulp.run('build');
+    gulp.run('build');
     gulp.watch('src/client/app/*.scss', ['styles']);
-    gulp.watch('src/client/app/*jsx', ['babel']);
+    gulp.watch('src/client/app/scripts.js', ['browserify']);
+    // gulp.watch('src/client/app/*jsx', ['babel']);
 });
 
 gulp.task('default', ['watch']);

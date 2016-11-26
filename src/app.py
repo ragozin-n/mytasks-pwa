@@ -8,16 +8,20 @@ from sqlalchemy import Table, MetaData, create_engine
 from db import DataBase
 
 env = Environment(loader=FileSystemLoader('server/templates'))
+connection = DataBase.init_db()
 
 def IndexPage(request):
     rendered = render_component(
         os.path.join(os.getcwd(), 'client', 'app', 'login.jsx'),
         to_static_markup=False
     )
-    #if request.method == 'POST':
-        # Check login and password
+    
+    if request.method == 'POST':
+        print(request.POST.getall('login'));
+        print(request.POST.getall('password'));
 
-    return Response(env.get_template('index.html').render(rendered=rendered,css=request.static_url('server/static/main.css')));
+
+    return Response(env.get_template('index.html').render(rendered=rendered,css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')));
 
 def RegisterPage(request):
     rendered = render_component(
@@ -25,12 +29,16 @@ def RegisterPage(request):
         to_static_markup=False
     )
 
-    return Response(env.get_template('index.html').render(rendered=rendered,css=request.static_url('server/static/main.css')));
+    if request.method == 'POST':
+        print(request.POST.getall('login'));
+        print(request.POST.getall('fullname'));
+        print(request.POST.getall('password_1'));
+        print(request.POST.getall('password_2'));
+
+    return Response(env.get_template('index.html').render(rendered=rendered,css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')));
 
 
 if __name__ == '__main__':
-
-    connection = DataBase.init_db()
 
     config = Configurator()
     config.add_static_view('static', 'server/static')

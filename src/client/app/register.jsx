@@ -10,22 +10,22 @@ class Register extends Component {
             <div className="card-content white-text">
               <span className="card-title">Регистрация:</span>
                 <div class="input-field col s6">
-                  <input placeholder="Логин" id="login" type="text"/>
+                  <input placeholder="Логин" name="login" type="text"/>
                 </div>
                 <div class="input-field col s6">
-                  <input placeholder="Ваше имя" id="fullname" type="text"/>
+                  <input placeholder="Ваше имя" name="fullname" type="text"/>
                 </div>
                 <div class="input-field col s6">
-                  <input placeholder="Пароль" id="password_1" type="text"/>
+                  <input placeholder="Пароль" name="password_1" type="text"/>
                 </div>
                 <div class="input-field col s6">
-                  <input placeholder="Повторите пароль" id="password_2" type="text"/>
+                  <input placeholder="Повторите пароль" name="password_2" type="text"/>
                 </div>
               </div>
               <div className="card-action">
-                <button className="btn waves-effect waves-light" type="submit" name="action" >
+                <a className="btn waves-effect waves-light" >
                   Зарегистрироваться
-                </button>
+                </a>
               </div>
           </form>
           </div>

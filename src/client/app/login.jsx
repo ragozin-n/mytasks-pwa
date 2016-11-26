@@ -9,17 +9,17 @@ class Login extends Component {
           <form action="/" method="POST" name="auth">
             <div className="card-content white-text">
               <span className="card-title">Авторизация:</span>
-                <div class="input-field col s6">
-                  <input placeholder="Логин" id="login" type="text"/>
+                <div className="input-field">
+                  <input placeholder="Логин" name="login" type="text"/>
                 </div>
-                <div class="input-field col s6">
-                  <input placeholder="Пароль" id="password" type="text"/>
+                <div className="input-field">
+                  <input placeholder="Пароль" name="password" type="text"/>
                 </div>
               </div>
               <div className="card-action">
-                <button className="btn waves-effect waves-light" type="submit" name="action" >
+                <a className="btn enter waves-effect waves-light">
                   Войти
-                </button>
+                </a>
                 <a className="btn-flat reg waves-effect waves-light" href="/register" >
                     Регистрация
                 </a>
