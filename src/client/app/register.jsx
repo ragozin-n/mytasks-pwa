@@ -23,7 +23,7 @@ class Register extends Component {
                 </div>
               </div>
               <div className="card-action">
-                <a className="btn waves-effect waves-light" >
+                <a className="btn reg-user waves-effect waves-light" >
                   Зарегистрироваться
                 </a>
               </div>

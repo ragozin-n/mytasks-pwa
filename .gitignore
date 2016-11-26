@@ -6,3 +6,5 @@ src/server/*
 !src/server/templates/
 src/client/public/*
 src/__pycache__/*
+#Start working with webstorm
+.idea/*

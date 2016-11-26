@@ -1,13 +1,13 @@
 'use strict';
 
-var gulp = require('gulp');
-var babel = require('gulp-babel');
-var concat = require('gulp-concat'); 
-var imagemin = require('gulp-imagemin');
-var sass = require('gulp-sass');
-var clean = require('gulp-clean');
-var browserify = require('browserify');
-var source = require('vinyl-source-stream');
+let gulp = require('gulp');
+let babel = require('gulp-babel');
+let concat = require('gulp-concat');
+let imagemin = require('gulp-imagemin');
+let sass = require('gulp-sass');
+let clean = require('gulp-clean');
+let browserify = require('browserify');
+let source = require('vinyl-source-stream');
 
 gulp.task('sass', ['clean'], function () {
     return gulp
@@ -32,7 +32,7 @@ gulp.task('images', function() {
 });
 
 gulp.task('bower', ['sass'], function(){
-    return gulp.src(['src/server/static/*.css','bower_components/materialize/dist/css/materialize.min.css'])
+    return gulp.src(['src/server/static/*.css','bower_components/materialize/dist/css/materialize.min.css', 'bower_components/sweetalert/dist/sweetalert.css'])
         .pipe(concat('main.css'))
         .pipe(gulp.dest('src/server/static'));
 })
@@ -43,6 +43,7 @@ gulp.task('build', function(){
     gulp.run('bower');
     // gulp.run('babel');
     gulp.run('images');
+    gulp.run('browserify');
 });
 
 gulp.task('clean', function(){
