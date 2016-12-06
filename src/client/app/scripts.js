@@ -16,7 +16,7 @@ $(function() {
                 confirmButtonText: "Упс! Сейчас заполню!"
             });
 		} else {
-			$.post("/", {login: login.val(), password: password.val()});
+			$.post("/", {login: login.val().toLowerCase(), password: password.val()});
 			login.val('');
 			password.val('');
 		}});
@@ -43,7 +43,7 @@ $(function() {
 			password_1.val('');
 			password_2.val('');
 		} else {
-        	$.post("/register", {login: login.val(), fullname: fullname.val(), password: password_1.val()});
+        	$.post("/register", {login: login.val().toLowerCase(), fullname: fullname.val(), password: password_1.val()});
 			login.val('');
 			fullname.val('');
 			password_1.val('');

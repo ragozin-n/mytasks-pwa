@@ -4,11 +4,12 @@ from pyramid.config import Configurator
 from pyramid.response import Response
 from jinja2 import FileSystemLoader, Environment
 from react.render import render_component
-from sqlalchemy import Table, MetaData, create_engine
+from sqlalchemy import Table, MetaData, create_engine, select
 from db import DataBase
 
 env = Environment(loader=FileSystemLoader('server/templates'))
-connection = DataBase.init_db()
+engine = create_engine("postgresql://localhost:5432/pwa_db")
+connection = DataBase.init_db(engine)
 
 def IndexPage(request):
     rendered = render_component(
@@ -17,11 +18,15 @@ def IndexPage(request):
     )
     
     if request.method == 'POST':
-        print(request.POST.getall('login'));
-        print(request.POST.getall('password'));
+        login = request.POST.getone('login')
+        password = request.POST.getone('password')
+        users = connection.execute(select([DataBase.users]))
 
+        for user in users:
+            if user[0] == login and user[1] == password:
+                print("Render app. Auth succes")
 
-    return Response(env.get_template('index.html').render(rendered=rendered,css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')));
+    return Response(env.get_template('index.html').render(rendered=rendered,css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')))
 
 def RegisterPage(request):
     rendered = render_component(
@@ -30,12 +35,17 @@ def RegisterPage(request):
     )
 
     if request.method == 'POST':
-        print(request.POST.getall('login'));
-        print(request.POST.getall('fullname'));
-        print(request.POST.getall('password_1'));
-        print(request.POST.getall('password_2'));
 
-    return Response(env.get_template('index.html').render(rendered=rendered,css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')));
+        users = connection.execute(select([DataBase.users]))
+        for username in users:
+            if username == request.POST.getone('login'):
+                print("user already exist")
+
+        connection.execute(DataBase.users.insert(),
+            {"login": request.POST.getone('login'), "password": request.POST.getone('password'),"fullName": request.POST.getone('fullname')})
+
+
+    return Response(env.get_template('index.html').render(rendered=rendered,css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')))
 
 
 if __name__ == '__main__':
