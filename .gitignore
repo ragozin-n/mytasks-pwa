@@ -8,3 +8,4 @@ src/client/public/*
 src/__pycache__/*
 #Start working with webstorm
 .idea/*
+npm-debug.log

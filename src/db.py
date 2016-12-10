@@ -6,7 +6,7 @@ class DataBase(object):
 
     users = Table('users', meta,
                 Column('login', String(30), primary_key=True),
-                Column('password', String(30), nullable=False),
+                Column('password', String(60), nullable=False),
                 Column('fullName', String(80), nullable=False),
                 extend_existing=True)
     posts = Table('tasks', meta,
@@ -16,11 +16,11 @@ class DataBase(object):
                 Column('isDone', Boolean, nullable=False, default=False),
                 extend_existing=True)
 
-    def init_db(engine):
+    def init_db(self, engine):
         conn = engine.connect()
 
         if not engine.dialect.has_table(engine, 'users') and not engine.dialect.has_table(engine, 'posts'):
-            meta.create_all(engine)
+            self.meta.create_all(engine)
         return conn
 
 # class User(Base):
