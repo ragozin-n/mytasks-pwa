@@ -35,21 +35,26 @@ gulp.task('bower', ['sass'], function(){
     return gulp.src(['src/server/static/*.css','bower_components/materialize/dist/css/materialize.min.css', 'bower_components/sweetalert/dist/sweetalert.css'])
         .pipe(concat('main.css'))
         .pipe(gulp.dest('src/server/static'));
-})
+});
 
 gulp.task('build', function(){
-    gulp.run('clean');
     gulp.run('sass');
     gulp.run('bower');
-    // gulp.run('babel');
+    gulp.run('babel');
     gulp.run('images');
     gulp.run('browserify');
+    gulp.run('clean');
 });
 
 gulp.task('clean', function(){
-    return gulp.src('src/server/static/*.css', {read:false})
+    return gulp.src(['src/server/static/*.css', '!src/server/static/bundle.js', 'src/server/static/*.js'], {read:false})
         .pipe(clean())
-})
+});
+
+gulp.task('clean-scripts', ['browserify'], function(){
+    return gulp.src(['!src/server/static/bundle.js', 'src/server/static/*.js'], {read:false})
+        .pipe(clean())
+});
 
 gulp.task('styles', function(){
     gulp.run('clean');
@@ -58,7 +63,7 @@ gulp.task('styles', function(){
 });
 
 gulp.task('browserify', function() {
-    return browserify('src/client/app/scripts.js')
+    return browserify('src/server/static/app.js')
         .bundle()
         .pipe(source('bundle.js'))
         .pipe(gulp.dest('src/server/static'));
@@ -67,8 +72,7 @@ gulp.task('browserify', function() {
 gulp.task('watch', function() {
     gulp.run('build');
     gulp.watch('src/client/app/*.scss', ['styles']);
-    gulp.watch('src/client/app/scripts.js', ['browserify']);
-    // gulp.watch('src/client/app/*jsx', ['babel']);
+    gulp.watch('src/client/app/*.jsx', ['babel', 'browserify', 'clean-scripts']);
 });
 
 gulp.task('default', ['watch']);

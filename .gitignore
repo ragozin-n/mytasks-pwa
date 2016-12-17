@@ -9,3 +9,4 @@ src/__pycache__/*
 #Start working with webstorm
 .idea/*
 npm-debug.log
+*.DS_Store

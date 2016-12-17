@@ -1,4 +1,4 @@
- from wsgiref.simple_server import make_server
+from wsgiref.simple_server import make_server
 import os
 from pyramid.config import Configurator
 from pyramid.response import Response
@@ -13,27 +13,20 @@ engine = create_engine("postgresql://localhost:5432/pwa_db")
 connection = DataBase().init_db(engine)
 
 def IndexPage(request):
-    rendered = render_component(
-        os.path.join(os.getcwd(), 'client', 'app', 'login.jsx'),
-        to_static_markup=False
-    )
     
     if request.method == 'POST':
         login = request.POST.getone('login')
         password = request.POST.getone('password')
+        print(login + ":" + password)
         users = connection.execute(select([DataBase.users]))
 
         for user in users:
             if user[0] == login and bcrypt.verify(str.encode(password)+request.registry.settings['salt'], user[1]):
                 print("Render app. Auth succes")
 
-    return Response(env.get_template('index.html').render(rendered=rendered,css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')))
+    return Response(env.get_template('index.html').render(css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')))
 
 def RegisterPage(request):
-    rendered = render_component(
-        os.path.join(os.getcwd(), 'client', 'app', 'register.jsx'),
-        to_static_markup=False
-    )
 
     if request.method == 'POST':
 
@@ -46,9 +39,9 @@ def RegisterPage(request):
 
         connection.execute(DataBase.users.insert(),
             {"login": request.POST.getone('login'), "password": str(hashed),"fullName": request.POST.getone('fullname')})
+        print("user " + request.POST.getone('login') + " : " + request.POST.getone('fullname') + " created")
 
-
-    return Response(env.get_template('index.html').render(rendered=rendered,css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')))
+    return Response(env.get_template('index.html').render(css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')))
 
 
 if __name__ == '__main__':
