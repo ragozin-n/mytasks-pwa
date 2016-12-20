@@ -3,7 +3,6 @@ import os
 from pyramid.config import Configurator
 from pyramid.response import Response
 from jinja2 import FileSystemLoader, Environment
-from react.render import render_component
 from sqlalchemy import Table, MetaData, create_engine, select
 from db import DataBase
 from passlib.hash import bcrypt
