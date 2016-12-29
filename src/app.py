@@ -22,6 +22,8 @@ def IndexPage(request):
         for user in users:
             if user[0] == login and bcrypt.verify(str.encode(password)+request.registry.settings['salt'], user[1]):
                 print("Render app. Auth succes")
+                import json
+                return Response(json.dumps({"username":login}))
 
     return Response(env.get_template('index.html').render(css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')))
 

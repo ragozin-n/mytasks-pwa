@@ -11,9 +11,11 @@ export default class Login extends Component {
             errorTitle: "",
             errorMessage: undefined,
             errorType: "error",
-            confirmText: undefined
+            confirmText: undefined,
+            isSuccess: false
         };
         this.verifyForm = this.verifyForm.bind(this);
+        this.login = this.login.bind(this);
     }
 
     verifyForm() {
@@ -24,13 +26,31 @@ export default class Login extends Component {
             this.state.confirmText = "Упс! Сейчас заполню!";
             this.setState({showError: true});
         } else {
-            let request = new XMLHttpRequest();
-            request.open('POST', '/', true);
-            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-            request.send(`login=${this._login.value.toString()}&password=${this._password.value.toString()}`);
+            setTimeout(this.login(this._login.value.toString(),this._password.value.toString(),3000));
             this._login.value = this._password.value = '';
-            //Get user info and render the main window
         }
+    }
+
+    login(login, pass) {
+        let request = new XMLHttpRequest();
+        request.open('POST', '/', true);
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        request.send(`login=${login}&password=${pass}`);
+
+        request.onreadystatechange = function () {
+            if (request.readyState != 4) return;
+            if (request.status != 200) {
+                console.log('Print error');
+                console.log(request.status + ': ' + request.statusText);
+            } else {
+                this.setState({isSuccess:true},() => {console.log('Auth complete!')});
+                let responce = JSON.parse(request.responseText);
+                console.log(responce);
+                localStorage.setItem('user',responce.username);
+
+                //Get user info and render the main window
+            }
+        }.bind(this);
     }
 
     render() {
