@@ -47,7 +47,7 @@ export default class Login extends Component {
                 let responce = JSON.parse(request.responseText);
                 console.log(responce);
                 localStorage.setItem('user',responce.username);
-
+                localStorage.setItem('tasks',responce.tasks);
                 //Get user info and render the main window
             }
         }.bind(this);

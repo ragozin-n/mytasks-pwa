@@ -3,7 +3,7 @@ import os
 from pyramid.config import Configurator
 from pyramid.response import Response
 from jinja2 import FileSystemLoader, Environment
-from sqlalchemy import Table, MetaData, create_engine, select
+from sqlalchemy import Table, MetaData, create_engine, select, and_
 from db import DataBase
 from passlib.hash import bcrypt
 
@@ -23,7 +23,16 @@ def IndexPage(request):
             if user[0] == login and bcrypt.verify(str.encode(password)+request.registry.settings['salt'], user[1]):
                 print("Render app. Auth succes")
                 import json
-                return Response(json.dumps({"username":login}))
+
+                tasks = connection.execute(select([DataBase.posts.c.task]). \
+                    where(and_(DataBase.posts.c.username == login, DataBase.posts.c.isDone == False)). \
+                    order_by(DataBase.posts.c.task))
+
+                result = []
+                for task in tasks:
+                    result += task
+
+                return Response(json.dumps({"username":login,"tasks":result}))
 
     return Response(env.get_template('index.html').render(css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')))
 
