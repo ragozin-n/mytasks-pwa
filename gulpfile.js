@@ -8,6 +8,8 @@ let sass = require('gulp-sass');
 let clean = require('gulp-clean');
 let browserify = require('browserify');
 let source = require('vinyl-source-stream');
+let gtap = require('gulp-tap');
+
 
 gulp.task('sass', ['clean'], function () {
     return gulp
@@ -42,8 +44,11 @@ gulp.task('build', function(){
     gulp.run('bower');
     gulp.run('babel');
     gulp.run('images');
-    gulp.run('browserify');
+    gulp.run('browserify-1');
+    gulp.run('browserify-2');
     gulp.run('clean');
+    gulp.run('clean-scripts');
+
 });
 
 gulp.task('clean', function(){
@@ -51,7 +56,7 @@ gulp.task('clean', function(){
         .pipe(clean())
 });
 
-gulp.task('clean-scripts', ['browserify'], function(){
+gulp.task('clean-scripts', ['browserify-1','browserify-2'], function(){
     return gulp.src(['!src/server/static/bundle.js', 'src/server/static/*.js'], {read:false})
         .pipe(clean())
 });
@@ -62,8 +67,15 @@ gulp.task('styles', function(){
     gulp.run('bower');
 });
 
-gulp.task('browserify', function() {
+gulp.task('browserify-2',['babel', 'browserify-1'], function() {
     return browserify('src/server/static/app.js')
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(gulp.dest('src/server/static'));
+});
+
+gulp.task('browserify-1',['babel'], function() {
+    return browserify('src/server/static/root.js')
         .bundle()
         .pipe(source('bundle.js'))
         .pipe(gulp.dest('src/server/static'));
@@ -72,7 +84,7 @@ gulp.task('browserify', function() {
 gulp.task('watch', function() {
     gulp.run('build');
     gulp.watch('src/client/app/*.scss', ['styles']);
-    gulp.watch('src/client/app/*.jsx', ['babel', 'browserify', 'clean-scripts']);
+    gulp.watch('src/client/app/*.jsx', ['babel', 'browserify-1', 'browserify-2', 'clean-scripts']);
 });
 
 gulp.task('default', ['watch']);

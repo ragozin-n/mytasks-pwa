@@ -47,8 +47,12 @@ export default class Login extends Component {
                 let responce = JSON.parse(request.responseText);
                 console.log(responce);
                 localStorage.setItem('user',responce.username);
-                localStorage.setItem('tasks',responce.tasks);
-                //Get user info and render the main window
+                localStorage.setItem('tasks_length', responce.tasks.length);
+                for (let i = 0; i < responce.tasks.length;i++) {
+                    localStorage.setItem(`task_${i}`,responce.tasks[i]);
+                }
+                localStorage.setItem('token',(localStorage.user.length+1));
+                //window.location.reload();
             }
         }.bind(this);
     }

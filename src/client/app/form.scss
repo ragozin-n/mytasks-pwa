@@ -29,3 +29,20 @@ body {
 .nopadding {
    padding: 0 !important;
 }
+
+.with-header {
+  margin-top: 100px !important;
+  border: none !important;
+}
+
+.delete-btn {
+  float: right;
+  position: relative;
+  top: -7px;
+  margin: 0px;
+}
+
+.addTaskItem > input {
+  margin: 0px !important;
+  height: 50% !important;
+}

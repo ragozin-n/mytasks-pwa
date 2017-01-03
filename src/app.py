@@ -16,7 +16,6 @@ def IndexPage(request):
     if request.method == 'POST':
         login = request.POST.getone('login')
         password = request.POST.getone('password')
-        print(login + ":" + password)
         users = connection.execute(select([DataBase.users]))
 
         for user in users:
@@ -32,7 +31,9 @@ def IndexPage(request):
                 for task in tasks:
                     result += task
 
+                print(json.dumps({"username":login,"tasks":result}))
                 return Response(json.dumps({"username":login,"tasks":result}))
+        print('User not found')
 
     return Response(env.get_template('index.html').render(css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')))
 
@@ -69,6 +70,6 @@ if __name__ == '__main__':
     config.add_view(RegisterPage, route_name='registration')
 
     app = config.make_wsgi_app()
-    server = make_server('localhost', 8081, app)
-    print("Serving localhost on 8081...")
+    server = make_server('localhost', 8080, app)
+    print("Serving localhost on 8080...")
     server.serve_forever()
