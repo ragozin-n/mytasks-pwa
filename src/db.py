@@ -10,7 +10,7 @@ class DataBase(object):
                 Column('fullName', String(80), nullable=False),
                 extend_existing=True)
     posts = Table('tasks', meta,
-                Column('id', Integer, nullable=False, primary_key=True),
+                Column('id', Integer, primary_key=True, autoincrement=True),
                 Column('username', String(30), ForeignKey('users.login') , nullable=False),
                 Column('task', String(140), nullable=False),
                 Column('isDone', Boolean, nullable=False, default=False),

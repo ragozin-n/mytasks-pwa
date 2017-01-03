@@ -1,51 +1,6 @@
 import React, {Component} from 'react';
 import SweetAlert from 'sweetalert-react';
 
-// export default class DashBoard extends Component {
-//
-//     DeleteTask(item) {
-//         console.log(item.target);
-//         console.log('deleting task');
-//     }
-//
-//     render() {
-//         let tasks = [];
-//         for (let i = 0; i < localStorage.tasks_length; i++) {
-//             tasks.push(<a href="#" className='collection-item' key={i}><span onClick={this.DeleteTask} className="badge new red" data-badge-caption="Delete"></span>{localStorage['task_'+i]}</a>);
-//         }
-//         return (
-//             <div className="container">
-//                 <div className="collection with-header col s6 offset-s4">
-//                     <div className="collection-header"><h4>Hello, {localStorage.user}</h4></div>
-//                     {tasks}
-//                 </div>
-//             </div>
-//         );
-//     }
-// }
-
-class TaskList extends Component {
-    render() {
-        return (
-            <div className="collection with-header col s6 offset-s4">
-                <div className="collection-header center"><h4>Hello, {localStorage.user}</h4></div>
-                <div className="collection-item">
-                    <div className="input-field inline">
-                        <input onChange={this.onChange} type="text" value={this.state.task}/>
-                        <a className="btn addTask" onClick={this.addTask}>+</a>
-                    </div>
-                </div>
-                    {this.props.items.map((task, taskIndex) =>
-                        <a key={taskIndex} className="collection-item">
-                            {task}
-                            <button className="delete-btn btn-flat" onClick={this.props.deleteTask}
-                                  value={taskIndex}> Delete </button>
-                        </a>
-                    )}
-            </div>);
-    }
-}
-
 export default class DashBoard extends Component {
 
     constructor(props) {
@@ -67,6 +22,7 @@ export default class DashBoard extends Component {
         this.deleteTask = this.deleteTask.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onUnload = this.onUnload.bind(this);
+        this.sync = this.sync.bind(this);
     };
 
     componentDidMount() {
@@ -78,17 +34,21 @@ export default class DashBoard extends Component {
     }
 
     onUnload(event) {
-        console.log("");
-        event.returnValue = "random_value";
+        console.log("sync");
+        //event.returnValue = "random_value";
     }
 
     deleteTask(e) {
         let taskIndex = parseInt(e.target.value, 10);
+        let currentTask = this.state.task;
         console.log(`Remove ${taskIndex} ${this.state.items[taskIndex]}`);
         this.setState(state => {
             this.state.items.splice(taskIndex, 1);
             return {items: state.items};
         });
+        if(currentTask) {
+            this.sync(localStorage.user,localStorage.token,'delete', currentTask);
+        }
     };
 
     onChange(e) {
@@ -96,13 +56,44 @@ export default class DashBoard extends Component {
     };
 
     addTask(e){
+        let currentTask = this.state.task;
+
         this.setState({
             items: this.state.items.concat([this.state.task]),
             task: ''
         });
 
+        if(currentTask) {
+            this.sync(localStorage.user,localStorage.token,'add', currentTask);
+        }
         document.getElementById('task').value = "";
     };
+
+    sync(user,token,type,data) {
+        let request = new XMLHttpRequest();
+        request.open('POST', '/data', true);
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        request.send(`user=${user}&token=${token}&type=${type}&data=${data}`);
+
+        // request.onreadystatechange = function () {
+        //     if (request.readyState != 4) return;
+        //     if (request.status != 200) {
+        //         console.log('Print error');
+        //         console.log(request.status + ': ' + request.statusText);
+        //     } else {
+        //         this.setState({isSuccess:true},() => {console.log('Auth complete!')});
+        //         let responce = JSON.parse(request.responseText);
+        //         console.log(responce);
+        //         localStorage.setItem('user',responce.username);
+        //         localStorage.setItem('tasks_length', responce.tasks.length);
+        //         for (let i = 0; i < responce.tasks.length;i++) {
+        //             localStorage.setItem(`task_${i}`,responce.tasks[i]);
+        //         }
+        //         localStorage.setItem('token',(localStorage.user.length+1));
+        //         //window.location.reload();
+        //     }
+        // }.bind(this);
+    }
 
     render(){
         return(

@@ -6,10 +6,30 @@ from jinja2 import FileSystemLoader, Environment
 from sqlalchemy import Table, MetaData, create_engine, select, and_
 from db import DataBase
 from passlib.hash import bcrypt
+import json
 
 env = Environment(loader=FileSystemLoader('server/templates'))
 engine = create_engine("postgresql://localhost:5432/pwa_db")
 connection = DataBase().init_db(engine)
+
+def Data(request):
+    if request.method == 'POST':
+        users = connection.execute(select([DataBase.users]))
+        print(request.POST.getone('user'))
+        print(len(request.POST.getone('user'))+1)
+        print(request.POST.getone('type') in ['add','delete'])
+
+        for user in users:
+            if(request.POST.getone('user') == user[0]):
+                if(len(request.POST.getone('user'))+1 == int(request.POST.getone('token'))):
+                    if(request.POST.getone('type') in ['add', 'delete']):
+                        # swtich
+                        print('Done!')
+                        connection.execute(DataBase.posts.insert(),
+                        {"username": request.POST.getone('user'), "task": request.POST.getone('data'), "isDone": False})
+        print(request.POST)
+        return Response('ok!')
+
 
 def IndexPage(request):
     
@@ -21,7 +41,6 @@ def IndexPage(request):
         for user in users:
             if user[0] == login and bcrypt.verify(str.encode(password)+request.registry.settings['salt'], user[1]):
                 print("Render app. Auth succes")
-                import json
 
                 tasks = connection.execute(select([DataBase.posts.c.task]). \
                     where(and_(DataBase.posts.c.username == login, DataBase.posts.c.isDone == False)). \
@@ -65,6 +84,9 @@ if __name__ == '__main__':
 
     config.add_route('home', '/')
     config.add_view(IndexPage, route_name='home')
+
+    config.add_route('sync', '/data')
+    config.add_view(Data, route_name='sync')
 
     config.add_route('registration', '/register')
     config.add_view(RegisterPage, route_name='registration')
