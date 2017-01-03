@@ -98,7 +98,8 @@ if __name__ == '__main__':
     config.add_view(RegisterPage, route_name='registration')
 
     app = config.make_wsgi_app()
-    PORT = int(os.environ.get("PORT", 5000))
+    # PORT = int(os.environ.get("PORT", 5000))
+    PORT = 8080
     server = make_server('0.0.0.0', PORT, app)
     print("Serving localhost on 8080...")
     server.serve_forever()
