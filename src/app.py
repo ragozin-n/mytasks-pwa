@@ -3,7 +3,7 @@ import os
 from pyramid.config import Configurator
 from pyramid.response import Response
 from jinja2 import FileSystemLoader, Environment
-from sqlalchemy import Table, MetaData, create_engine, select, and_
+from sqlalchemy import Table, MetaData, create_engine, select, and_, delete
 from db import DataBase
 from passlib.hash import bcrypt
 import json
@@ -13,23 +13,28 @@ engine = create_engine("postgresql://localhost:5432/pwa_db")
 connection = DataBase().init_db(engine)
 
 def Data(request):
+    users = connection.execute(select([DataBase.users]))
     if request.method == 'POST':
-        users = connection.execute(select([DataBase.users]))
-        print(request.POST.getone('user'))
-        print(len(request.POST.getone('user'))+1)
-        print(request.POST.getone('type') in ['add','delete'])
-
         for user in users:
             if(request.POST.getone('user') == user[0]):
                 if(len(request.POST.getone('user'))+1 == int(request.POST.getone('token'))):
-                    if(request.POST.getone('type') in ['add', 'delete']):
-                        # swtich
-                        print('Done!')
+                    if(request.POST.getone('type') == 'add'):
                         connection.execute(DataBase.posts.insert(),
                         {"username": request.POST.getone('user'), "task": request.POST.getone('data'), "isDone": False})
-        print(request.POST)
-        return Response('ok!')
+                    if(request.POST.getone('type') == 'delete'):
+                        query = DataBase.posts.delete(DataBase.posts.c.task == request.POST.getone('data'))
+                        connection.execute(query)
 
+        tasks = connection.execute(select([DataBase.posts.c.task]). \
+                                   where(and_(DataBase.posts.c.username == request.POST.getone('user'), DataBase.posts.c.isDone == False)). \
+                                   order_by(DataBase.posts.c.task))
+
+        result = []
+        for task in tasks:
+            result += task
+
+        print(json.dumps({"username": request.POST.getone('user'), "tasks": result}))
+        return Response(json.dumps({"username": request.POST.getone('user'), "tasks": result}))
 
 def IndexPage(request):
     

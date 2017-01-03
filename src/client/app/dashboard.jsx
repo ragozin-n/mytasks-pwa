@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import SweetAlert from 'sweetalert-react';
+import ReactInterval from 'react-interval';
 
 export default class DashBoard extends Component {
 
@@ -23,14 +24,20 @@ export default class DashBoard extends Component {
         this.onChange = this.onChange.bind(this);
         this.onUnload = this.onUnload.bind(this);
         this.sync = this.sync.bind(this);
+        this.toggleTask = this.toggleTask.bind(this);
     };
 
+    toggleTask(e) {
+        //toggle isDone boolean
+    }
+
+
     componentDidMount() {
-        window.addEventListener("beforeunload", this.onUnload)
+        window.addEventListener("beforeunload", this.onUnload);
     }
 
     componentWillUnmount() {
-        window.removeEventListener("beforeunload", this.onUnload)
+        window.removeEventListener("beforeunload", this.onUnload);
     }
 
     onUnload(event) {
@@ -40,15 +47,14 @@ export default class DashBoard extends Component {
 
     deleteTask(e) {
         let taskIndex = parseInt(e.target.value, 10);
-        let currentTask = this.state.task;
+        let currentTask = this.state.items[taskIndex];
         console.log(`Remove ${taskIndex} ${this.state.items[taskIndex]}`);
         this.setState(state => {
             this.state.items.splice(taskIndex, 1);
             return {items: state.items};
         });
-        if(currentTask) {
-            this.sync(localStorage.user,localStorage.token,'delete', currentTask);
-        }
+        this.sync(localStorage.user, localStorage.token, 'delete', currentTask);
+
     };
 
     onChange(e) {
@@ -70,29 +76,35 @@ export default class DashBoard extends Component {
     };
 
     sync(user,token,type,data) {
+        console.log('SYNC!');
         let request = new XMLHttpRequest();
         request.open('POST', '/data', true);
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         request.send(`user=${user}&token=${token}&type=${type}&data=${data}`);
 
-        // request.onreadystatechange = function () {
-        //     if (request.readyState != 4) return;
-        //     if (request.status != 200) {
-        //         console.log('Print error');
-        //         console.log(request.status + ': ' + request.statusText);
-        //     } else {
-        //         this.setState({isSuccess:true},() => {console.log('Auth complete!')});
-        //         let responce = JSON.parse(request.responseText);
-        //         console.log(responce);
-        //         localStorage.setItem('user',responce.username);
-        //         localStorage.setItem('tasks_length', responce.tasks.length);
-        //         for (let i = 0; i < responce.tasks.length;i++) {
-        //             localStorage.setItem(`task_${i}`,responce.tasks[i]);
-        //         }
-        //         localStorage.setItem('token',(localStorage.user.length+1));
-        //         //window.location.reload();
-        //     }
-        // }.bind(this);
+        request.onreadystatechange = function () {
+            if (request.readyState != 4) return;
+            if (request.status != 200) {
+                console.log('Print error');
+                //Добавить на страницу что-нибудь, если автономный режим
+                console.log(request.status + ': ' + request.statusText);
+            } else {
+                let responce = JSON.parse(request.responseText);
+                console.log(responce);
+                localStorage.setItem('user', responce.username);
+                localStorage.setItem('tasks_length', responce.tasks.length);
+                for (let i = 0; i < responce.tasks.length; i++) {
+                    localStorage.setItem(`task_${i}`, responce.tasks[i]);
+                }
+                localStorage.setItem('token', (localStorage.user.length + 1));
+
+                let items = [];
+                for (let i = 0; i < localStorage.tasks_length; i++) {
+                    items.push(localStorage[`task_${i}`]);
+                }
+                this.setState({items: items});
+            }
+        }.bind(this);
     }
 
     render(){
@@ -108,7 +120,7 @@ export default class DashBoard extends Component {
                         <span className="btn addTask" onClick={this.addTask}>+</span>
                     </a>
                     {this.state.items.map((task, taskIndex) =>
-                        <a key={taskIndex} className="collection-item">
+                        <a key={taskIndex} onDoubleClick={this.toggleTask} className="collection-item">
                             {task}
                             <button className="delete-btn btn-flat" onClick={this.deleteTask}
                                     value={taskIndex}> Delete </button>
@@ -123,6 +135,7 @@ export default class DashBoard extends Component {
                     confirmButtonText={this.state.confirmText}
                     onConfirm={() => this.setState({showError: false})}
                 />
+                <ReactInterval timeout={10000} enabled={false} callback={() => {this.sync(localStorage.user, localStorage.token, 'update', 0)}}/>
             </div>
         );
     }

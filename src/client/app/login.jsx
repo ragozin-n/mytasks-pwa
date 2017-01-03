@@ -52,7 +52,7 @@ export default class Login extends Component {
                     localStorage.setItem(`task_${i}`,responce.tasks[i]);
                 }
                 localStorage.setItem('token',(localStorage.user.length+1));
-                //window.location.reload();
+                window.location.reload();
             }
         }.bind(this);
     }
