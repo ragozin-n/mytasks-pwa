@@ -9,7 +9,8 @@ from passlib.hash import bcrypt
 import json
 
 env = Environment(loader=FileSystemLoader('server/templates'))
-DB_PATH = "postgresql://localhost:5432/pwa_db"
+# DB_PATH = "postgresql://localhost:5432/pwa_db"
+DB_PATH = "postgres://fpjotnzddzayus:570ffe920bc0c790d9eddce1fcbd269e836cf1992daaf77e041ed7266d43784d@ec2-107-20-193-74.compute-1.amazonaws.com:5432/d6cder18a6afpt"
 engine = create_engine(DB_PATH)
 connection = DataBase().init_db(engine)
 
@@ -66,7 +67,7 @@ def RegisterPage(request):
 
     if request.method == 'POST':
 
-        hashed = bcrypt.hash(str.encode(request.POST.getone('password'))+request.registry.settings['salt'])
+        hashed = bcrypt.hash(str.encode(request.POST.getone('password')),request.registry.settings['salt'])
 
         users = connection.execute(select([DataBase.users]))
         for username in users:
@@ -84,7 +85,7 @@ if __name__ == '__main__':
 
     config = Configurator()
     settings = config.get_settings()
-    settings['salt'] = b"abc"
+    settings['salt'] = bcrypt.gensalt(10)
 
     config.add_static_view('static', 'server/static')
 
