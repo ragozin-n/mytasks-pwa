@@ -9,7 +9,8 @@ from passlib.hash import bcrypt
 import json
 
 env = Environment(loader=FileSystemLoader('server/templates'))
-engine = create_engine("postgresql://localhost:5432/pwa_db")
+DB_PATH = "postgresql://localhost:5432/pwa_db"
+engine = create_engine(DB_PATH)
 connection = DataBase().init_db(engine)
 
 def Data(request):
@@ -97,6 +98,7 @@ if __name__ == '__main__':
     config.add_view(RegisterPage, route_name='registration')
 
     app = config.make_wsgi_app()
-    server = make_server('localhost', 8080, app)
+    PORT = int(os.environ.get("PORT", 5000))
+    server = make_server('0.0.0.0', PORT, app)
     print("Serving localhost on 8080...")
     server.serve_forever()
