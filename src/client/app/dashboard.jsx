@@ -135,7 +135,7 @@ export default class DashBoard extends Component {
                     confirmButtonText={this.state.confirmText}
                     onConfirm={() => this.setState({showError: false})}
                 />
-                <ReactInterval timeout={10000} enabled={false} callback={() => {this.sync(localStorage.user, localStorage.token, 'update', 0)}}/>
+                <ReactInterval timeout={10000} enabled={true} callback={() => {this.sync(localStorage.user, localStorage.token, 'update', 0)}}/>
             </div>
         );
     }

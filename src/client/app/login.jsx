@@ -69,7 +69,7 @@ export default class Login extends Component {
                                 <input ref={el => this._login = el} placeholder="Логин" name="login" type="text"/>
                             </div>
                             <div className="input-field">
-                                <input ref={el => this._password = el} placeholder="Пароль" name="password" type="text"/>
+                                <input ref={el => this._password = el} placeholder="Пароль" name="password" type="password" required/>
                             </div>
                         </div>
                         <div className="card-action">

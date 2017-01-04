@@ -35,6 +35,7 @@ export default class Register extends Component {
             request.send(`login=${this._login.value.toString()}&password=${this._password1.value.toString()}&fullname=${this._fullname.value.toString()}`);
             this._login.value = this._password1.value = this._password1.value = this._password2.value = this._fullname.value = '';
             //Get user info and render the main window
+            
         }
     }
 
@@ -53,10 +54,10 @@ export default class Register extends Component {
                                 <input ref={el => this._fullname = el} placeholder="Ваше имя" name="fullname" type="text"/>
                             </div>
                             <div className="input-field">
-                                <input ref={el => this._password1 = el} placeholder="Пароль" name="password_1" type="text"/>
+                                <input ref={el => this._password1 = el} placeholder="Пароль" name="password_1" type="password" required/>
                             </div>
                             <div className="input-field">
-                                <input ref={el => this._password2 = el} placeholder="Повторите пароль" name="password_2" type="text"/>
+                                <input ref={el => this._password2 = el} placeholder="Повторите пароль" name="password_2" type="password" required/>
                             </div>
                         </div>
                         <div className="card-action">

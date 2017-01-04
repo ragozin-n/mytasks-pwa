@@ -52,7 +52,7 @@ def IndexPage(request):
 
                 tasks = connection.execute(select([DataBase.posts.c.task]). \
                     where(and_(DataBase.posts.c.username == login, DataBase.posts.c.isDone == False)). \
-                    order_by(DataBase.posts.c.task))
+                    order_by(DataBase.posts.c.id))
 
                 result = []
                 for task in tasks:
@@ -100,7 +100,6 @@ if __name__ == '__main__':
     config.add_view(RegisterPage, route_name='registration')
 
     app = config.make_wsgi_app()
-    # PORT = os.environ['PORT']
     PORT = 8080
     server = make_server('0.0.0.0', PORT, app)
     print("Serving localhost on 8080...")
