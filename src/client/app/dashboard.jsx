@@ -63,14 +63,20 @@ export default class DashBoard extends Component {
 
     addTask(e){
         let currentTask = this.state.task;
-
+        if(currentTask) {
         this.setState({
             items: this.state.items.concat([this.state.task]),
             task: ''
         });
 
-        if(currentTask) {
-            this.sync(localStorage.user,localStorage.token,'add', currentTask);
+        this.sync(localStorage.user,localStorage.token,'add', currentTask);
+        } else {
+            this.setState({task: ''});
+            this.state.errorTitle = "ЧТООО ПРОИСХОДИТТ????";
+            this.state.errorMessage = "Для того, для кого ясна пустота,\nВсё становится ясным.";
+            this.state.errorType = "warning";
+            this.state.confirmText = "Простите за пустую задачу, я просто хотел проверить кнопку";
+            this.setState({showError: true});
         }
         document.getElementById('task').value = "";
     };

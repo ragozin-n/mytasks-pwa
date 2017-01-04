@@ -35,7 +35,20 @@ export default class Register extends Component {
             request.send(`login=${this._login.value.toString()}&password=${this._password1.value.toString()}&fullname=${this._fullname.value.toString()}`);
             this._login.value = this._password1.value = this._password1.value = this._password2.value = this._fullname.value = '';
             //Get user info and render the main window
-            window.location = "http://mytasks-pwa-zxspectrum.c9users.io/";
+            request.onreadystatechange = function () {
+            if (request.readyState != 4) return;
+            if (request.status != 200) {
+                console.log('Print error');
+                console.log(request.status + ': ' + request.statusText);
+                this.state.errorTitle = "Ха-ха-ха!";
+                this.state.errorMessage = `Пользователь с таким логином уже есть!`;
+                this.state.errorType = "error";
+                this.state.confirmText = "Придется думать над новым логином";
+                this.setState({showError: true});
+            } else {
+                window.location = "http://mytasks-pwa-zxspectrum.c9users.io/";
+            }
+            }.bind(this);
         }
     }
 

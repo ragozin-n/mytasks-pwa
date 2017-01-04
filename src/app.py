@@ -44,8 +44,6 @@ def IndexPage(request):
         login = request.POST.getone('login')
         password = request.POST.getone('password').encode('utf-8')
         users = connection.execute(select([DataBase.users]))
-        # hashed = bcrypt.hashpw(password, request.registry.settings['salt'])
-        
         for user in users:
             if user[0] == login and bcrypt.hashpw(password, request.registry.settings['salt']) == user[1]:
                 print("Render app. Auth succes")
@@ -61,6 +59,12 @@ def IndexPage(request):
                 print(json.dumps({"username":login,"tasks":result}))
                 return Response(json.dumps({"username":login,"tasks":result}))
         print('User not found')
+        
+        response = Response()
+        response.status = 404
+        response.body = json.dumps({"error":"User not found"})
+        response.content_type = 'application/json'
+        return response
 
     return Response(env.get_template('index.html').render(css=request.static_url('server/static/main.css'),bundle=request.static_url('server/static/bundle.js')))
 
@@ -74,6 +78,11 @@ def RegisterPage(request):
         for username in users:
             if username == request.POST.getone('login'):
                 print("user already exist")
+                response = Response()
+                response.status = 409
+                response.body = json.dumps({"error":"User already exist"})
+                response.content_type = 'application/json'
+                return response
 
         connection.execute(DataBase.users.insert(),
             {"login": request.POST.getone('login'), "password": str(hashed),"fullName": request.POST.getone('fullname')})

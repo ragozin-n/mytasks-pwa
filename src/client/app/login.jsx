@@ -42,6 +42,11 @@ export default class Login extends Component {
             if (request.status != 200) {
                 console.log('Print error');
                 console.log(request.status + ': ' + request.statusText);
+                this.state.errorTitle = "Оу!";
+                this.state.errorMessage = `Нет такого пользователя`;
+                this.state.errorType = "error";
+                this.state.confirmText = "Я не грязный хакер";
+                this.setState({showError: true});
             } else {
                 this.setState({isSuccess:true},() => {console.log('Auth complete!')});
                 let responce = JSON.parse(request.responseText);
