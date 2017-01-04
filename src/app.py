@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
     config = Configurator()
     settings = config.get_settings()
-    settings['salt'] = bcrypt.gensalt(10)
+    settings['salt'] = "$2a$12$AAAAAAAAAAAAAACgpDEPGQ=="
 
     config.add_static_view('static', 'server/static')
 
