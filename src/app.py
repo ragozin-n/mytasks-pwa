@@ -5,7 +5,7 @@ from pyramid.response import Response
 from jinja2 import FileSystemLoader, Environment
 from sqlalchemy import Table, MetaData, create_engine, select, and_, delete
 from db import DataBase
-from passlib.hash import bcrypt
+import bcrypt
 import json
 
 env = Environment(loader=FileSystemLoader('server/templates'))
@@ -42,11 +42,12 @@ def IndexPage(request):
     
     if request.method == 'POST':
         login = request.POST.getone('login')
-        password = request.POST.getone('password')
+        password = request.POST.getone('password').encode('utf-8')
         users = connection.execute(select([DataBase.users]))
-
+        # hashed = bcrypt.hashpw(password, request.registry.settings['salt'])
+        
         for user in users:
-            if user[0] == login and bcrypt.verify(str.encode(password)+request.registry.settings['salt'], user[1]):
+            if user[0] == login and bcrypt.hashpw(password, request.registry.settings['salt']) == user[1]:
                 print("Render app. Auth succes")
 
                 tasks = connection.execute(select([DataBase.posts.c.task]). \
@@ -67,7 +68,7 @@ def RegisterPage(request):
 
     if request.method == 'POST':
 
-        hashed = bcrypt.hash(str.encode(request.POST.getone('password')),request.registry.settings['salt'])
+        hashed = bcrypt.hashpw(request.POST.getone('password').encode('utf-8'),request.registry.settings['salt'])
 
         users = connection.execute(select([DataBase.users]))
         for username in users:
@@ -99,7 +100,7 @@ if __name__ == '__main__':
     config.add_view(RegisterPage, route_name='registration')
 
     app = config.make_wsgi_app()
-    # PORT = int(os.environ.get("PORT", 5000))
+    # PORT = os.environ['PORT']
     PORT = 8080
     server = make_server('0.0.0.0', PORT, app)
     print("Serving localhost on 8080...")
