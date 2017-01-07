@@ -27,14 +27,19 @@ def Data(request):
                         query = DataBase.posts.delete(DataBase.posts.c.task == request.POST.getone('data'))
                         connection.execute(query)
 
-        tasks = connection.execute(select([DataBase.posts.c.task]). \
-                                   where(and_(DataBase.posts.c.username == request.POST.getone('user'), DataBase.posts.c.isDone == False)). \
+        tasks = connection.execute(select([DataBase.posts.c.task, DataBase.posts.c.isDone]). \
+                                   where(and_(DataBase.posts.c.username == request.POST.getone('user'))). \
                                    order_by(DataBase.posts.c.task))
 
         result = []
         for task in tasks:
-            result += task
-
+            # some trouble with adding throw {"name":task[0],"isDone":task[1]}
+            _task = {}
+            _task["name"] = task[0]
+            _task["isDone"] = task[1]
+            result.append(_task)
+                
+        print(result)
         print(json.dumps({"username": request.POST.getone('user'), "tasks": result}))
         return Response(json.dumps({"username": request.POST.getone('user'), "tasks": result}))
 
@@ -48,14 +53,20 @@ def IndexPage(request):
             if user[0] == login and bcrypt.hashpw(password, request.registry.settings['salt']) == user[1]:
                 print("Render app. Auth succes")
 
-                tasks = connection.execute(select([DataBase.posts.c.task]). \
+                tasks = connection.execute(select([DataBase.posts.c.task, DataBase.posts.c.isDone]). \
                     where(and_(DataBase.posts.c.username == login, DataBase.posts.c.isDone == False)). \
                     order_by(DataBase.posts.c.id))
 
                 result = []
                 for task in tasks:
-                    result += task
-
+                    # some trouble with adding throw {"name":task[0],"isDone":task[1]}
+                    _task = {}
+                    _task["name"] = task[0]
+                    _task["isDone"] = task[1]
+                    print(_task)
+                    result.append(_task)
+                
+                print(result)
                 print(json.dumps({"username":login,"tasks":result}))
                 return Response(json.dumps({"username":login,"tasks":result}))
         print('User not found')

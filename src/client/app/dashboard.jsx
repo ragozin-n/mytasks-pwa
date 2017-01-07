@@ -6,10 +6,8 @@ export default class DashBoard extends Component {
 
     constructor(props) {
         super(props);
-        let items = [];
-        for(let i = 0; i < localStorage.tasks_length; i++) {
-            items.push(localStorage[`task_${i}`]);
-        }
+        let items = JSON.parse(localStorage.tasks);
+
         this.state = {
             items: items,
             task: '',
@@ -47,7 +45,8 @@ export default class DashBoard extends Component {
 
     deleteTask(e) {
         let taskIndex = parseInt(e.target.value, 10);
-        let currentTask = this.state.items[taskIndex];
+        let currentTask = this.state.items[taskIndex]['name'];
+        console.log(currentTask);
         console.log(`Remove ${taskIndex} ${this.state.items[taskIndex]}`);
         this.setState(state => {
             this.state.items.splice(taskIndex, 1);
@@ -65,7 +64,7 @@ export default class DashBoard extends Component {
         let currentTask = this.state.task;
         if(currentTask) {
         this.setState({
-            items: this.state.items.concat([this.state.task]),
+            items: this.state.items.concat({"name":this.state.task,"isDone":false}),
             task: ''
         });
 
@@ -97,17 +96,11 @@ export default class DashBoard extends Component {
             } else {
                 let responce = JSON.parse(request.responseText);
                 console.log(responce);
+                
                 localStorage.setItem('user', responce.username);
-                localStorage.setItem('tasks_length', responce.tasks.length);
-                for (let i = 0; i < responce.tasks.length; i++) {
-                    localStorage.setItem(`task_${i}`, responce.tasks[i]);
-                }
+                localStorage.setItem('tasks', JSON.stringify(responce.tasks));
                 localStorage.setItem('token', (localStorage.user.length + 1));
-
-                let items = [];
-                for (let i = 0; i < localStorage.tasks_length; i++) {
-                    items.push(localStorage[`task_${i}`]);
-                }
+                let items = JSON.parse(localStorage.tasks);
                 this.setState({items: items});
             }
         }.bind(this);
@@ -127,7 +120,7 @@ export default class DashBoard extends Component {
                     </a>
                     {this.state.items.map((task, taskIndex) =>
                         <a key={taskIndex} onDoubleClick={this.toggleTask} className="collection-item">
-                            {task}
+                            {task.name} {task.isDone ? "(Done)" : "(Not done yet)"}
                             <button className="delete-btn btn-flat" onClick={this.deleteTask}
                                     value={taskIndex}> Delete </button>
                         </a>
@@ -141,7 +134,7 @@ export default class DashBoard extends Component {
                     confirmButtonText={this.state.confirmText}
                     onConfirm={() => this.setState({showError: false})}
                 />
-                <ReactInterval timeout={10000} enabled={true} callback={() => {this.sync(localStorage.user, localStorage.token, 'update', 0)}}/>
+                <ReactInterval timeout={100000} enabled={true} callback={() => {this.sync(localStorage.user, localStorage.token, 'update', 0)}}/>
             </div>
         );
     }
