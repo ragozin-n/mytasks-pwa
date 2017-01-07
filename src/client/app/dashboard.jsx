@@ -27,8 +27,21 @@ export default class DashBoard extends Component {
 
     toggleTask(e) {
         //toggle isDone boolean
+        console.log(e.target.name);
+        let newItems = this.state.items;
+        for(let i = 0; i < newItems.length; i++) {
+            if(newItems[i].name == e.target.name) {
+                let _state = newItems[i].isDone;
+                newItems[i].isDone = !newItems[i].isDone;
+                this.setState({items:newItems});
+                if(!_state) {
+                    this.sync(localStorage.user, localStorage.token, 'done', e.target.name);
+                } else {
+                    this.sync(localStorage.user, localStorage.token, 'cancel', e.target.name);    
+                }
+            }
+        }
     }
-
 
     componentDidMount() {
         window.addEventListener("beforeunload", this.onUnload);
@@ -119,7 +132,7 @@ export default class DashBoard extends Component {
                         <span className="btn addTask" onClick={this.addTask}>+</span>
                     </a>
                     {this.state.items.map((task, taskIndex) =>
-                        <a key={taskIndex} onDoubleClick={this.toggleTask} className="collection-item">
+                        <a name={task.name} key={taskIndex} onDoubleClick={this.toggleTask} className="collection-item">
                             {task.name} {task.isDone ? "(Done)" : "(Not done yet)"}
                             <button className="delete-btn btn-flat" onClick={this.deleteTask}
                                     value={taskIndex}> Delete </button>

@@ -26,6 +26,16 @@ def Data(request):
                     if(request.POST.getone('type') == 'delete'):
                         query = DataBase.posts.delete(DataBase.posts.c.task == request.POST.getone('data'))
                         connection.execute(query)
+                    if(request.POST.getone('type') == 'done'):
+                        query = DataBase.posts.update().\
+                                where(DataBase.posts.c.task==request.POST.getone('data')).\
+                                values(isDone=True)
+                        connection.execute(query)
+                    if(request.POST.getone('type') == 'cancel'):
+                        query = DataBase.posts.update().\
+                                where(DataBase.posts.c.task==request.POST.getone('data')).\
+                                values(isDone=False)
+                        connection.execute(query)
 
         tasks = connection.execute(select([DataBase.posts.c.task, DataBase.posts.c.isDone]). \
                                    where(and_(DataBase.posts.c.username == request.POST.getone('user'))). \
