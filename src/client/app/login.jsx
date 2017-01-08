@@ -45,7 +45,7 @@ export default class Login extends Component {
                 this.state.errorTitle = "Оу!";
                 this.state.errorMessage = `Нет такого пользователя`;
                 this.state.errorType = "error";
-                this.state.confirmText = "Я не грязный хакер";
+                this.state.confirmText = "Окей";
                 this.setState({showError: true});
             } else {
                 this.setState({isSuccess:true},() => {console.log('Auth complete!')});
