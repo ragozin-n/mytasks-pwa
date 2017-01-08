@@ -8,7 +8,7 @@ export default class RootComponent extends Component {
     render() {
         if(localStorage.token) {
             if(localStorage.token == localStorage.user.length+1) {
-                return (<div><Navbar logo="MyTasks DashBoard"/><DashBoard/></div>)
+                return (<div><Navbar logo="DashBoard"/><DashBoard/></div>)
             }
         }
         return (<div><Navbar logo="MyTasks"/><Login/></div>);

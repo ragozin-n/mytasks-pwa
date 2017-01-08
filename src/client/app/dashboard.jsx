@@ -7,7 +7,6 @@ export default class DashBoard extends Component {
     constructor(props) {
         super(props);
         let items = JSON.parse(localStorage.tasks);
-
         this.state = {
             items: items,
             task: '',
@@ -70,7 +69,17 @@ export default class DashBoard extends Component {
     };
 
     onChange(e) {
-        this.setState({ task: e.target.value });
+        if(e.target.value.length < 140) {
+            this.setState({ task: e.target.value });
+        } else {
+            this.setState({task: ''});
+            document.getElementById('task').value = "";
+            this.state.errorTitle = "Тише, тише";
+            this.state.errorMessage = "Попробуй уместить все в 140 символов.";
+            this.state.errorType = "warning";
+            this.state.confirmText = "Окей, попробую.";
+            this.setState({showError: true});
+        }
     };
 
     addTask(e){
@@ -106,6 +115,7 @@ export default class DashBoard extends Component {
                 console.log('Print error');
                 //Добавить на страницу что-нибудь, если автономный режим
                 console.log(request.status + ': ' + request.statusText);
+                document.getElementsByClassName('nav-wrapper')[0].style.backgroundColor = "#FE5E57";
             } else {
                 let responce = JSON.parse(request.responseText);
                 console.log(responce);
@@ -115,6 +125,7 @@ export default class DashBoard extends Component {
                 localStorage.setItem('token', (localStorage.user.length + 1));
                 let items = JSON.parse(localStorage.tasks);
                 this.setState({items: items});
+                document.getElementsByClassName('nav-wrapper')[0].style.backgroundColor = "#5DD775";
             }
         }.bind(this);
     }
@@ -125,8 +136,8 @@ export default class DashBoard extends Component {
                 <div className="collection with-header col s6 offset-s4">
                     <div className="collection-header center"><h4>Hello, {localStorage.user}</h4></div>
                     <a className="collection-item addTaskItem center">
-                            Add task:
-                        <span className="input-field inline">
+                        <span>Add task:</span>
+                        <span className="input-field">
                             <input id="task" onChange={this.onChange}/>
                         </span>
                         <span className="btn addTask" onClick={this.addTask}>+</span>
@@ -147,7 +158,7 @@ export default class DashBoard extends Component {
                     confirmButtonText={this.state.confirmText}
                     onConfirm={() => this.setState({showError: false})}
                 />
-                <ReactInterval timeout={100000} enabled={true} callback={() => {this.sync(localStorage.user, localStorage.token, 'update', 0)}}/>
+                <ReactInterval timeout={10000} enabled={true} callback={() => {this.sync(localStorage.user, localStorage.token, 'update', 0)}}/>
             </div>
         );
     }

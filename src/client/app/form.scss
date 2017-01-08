@@ -43,7 +43,12 @@ body {
   margin: 0px;
 }
 
-.addTaskItem > input {
-  margin: 0px !important;
+.addTaskItem > span > input {
+  margin: 0px 15px !important;
   height: 50% !important;
+  min-width: 300px !important;
+}
+.addTaskItem > span {
+  display: inline-flex;
+  justify-content:center;
 }
