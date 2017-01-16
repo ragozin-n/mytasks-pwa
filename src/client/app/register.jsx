@@ -17,16 +17,20 @@ export default class Register extends Component {
 
     verifyForm() {
         if (!this._login.value.toString() || !this._password1.value.toString() || !this._fullname.value.toString() || !this._password2.value.toString()) {
-            this.state.errorTitle = "Хей!";
-            this.state.errorMessage = "Забыл заполнить поля!";
-            this.state.errorType = "warning";
-            this.state.confirmText = "Упс! Сейчас заполню!";
+            this.state = {
+                errorTitle: "Хей!",
+                errorMessage: "Забыл заполнить поля!",
+                errorType: "warning",
+                confirmText: "Упс! Сейчас заполню..."
+            };
             this.setState({showError: true});
         } else if (this._password1.value.toString() !== this._password2.value.toString()) {
-            this.state.errorTitle = "Ой!";
-            this.state.errorMessage = "Пароли не совпадают!";
-            this.state.errorType = "error";
-            this.state.confirmText = "Буду внимательней...";
+            this.state = {
+                errorTitle: "Ой!",
+                errorMessage: "Пароли не совпадают!",
+                errorType: "error",
+                confirmText: "Буду внимательней..."
+            };
             this.setState({showError: true});
         } else {
             let request = new XMLHttpRequest();
@@ -34,16 +38,19 @@ export default class Register extends Component {
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             request.send(`login=${this._login.value.toString()}&password=${this._password1.value.toString()}&fullname=${this._fullname.value.toString()}`);
             this._login.value = this._password1.value = this._password1.value = this._password2.value = this._fullname.value = '';
-            //Get user info and render the main window
+            
+            //Ждем ошибку с сервера, если она будет
             request.onreadystatechange = function () {
             if (request.readyState != 4) return;
             if (request.status != 200) {
                 console.log('Print error');
                 console.log(request.status + ': ' + request.statusText);
-                this.state.errorTitle = "Ха-ха-ха!";
-                this.state.errorMessage = `Пользователь с таким логином уже есть!`;
-                this.state.errorType = "error";
-                this.state.confirmText = "Придется думать над новым логином";
+                this.state = {
+                    errorTitle: "Ха-ха-ха!",
+                    errorMessage: `Пользователь с таким логином уже есть!`,
+                    errorType: "error",
+                    confirmText: "Придется думать над новым логином"
+                };
                 this.setState({showError: true});
             } else {
                 window.location = "http://mytasks-pwa-zxspectrum.c9users.io/";

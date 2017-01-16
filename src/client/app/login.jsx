@@ -20,10 +20,12 @@ export default class Login extends Component {
 
     verifyForm() {
         if(!this._login.value.toString() || !this._password.value.toString()){
-            this.state.errorTitle = "Хей!";
-            this.state.errorMessage = "Забыл заполнить поля!";
-            this.state.errorType = "warning";
-            this.state.confirmText = "Упс! Сейчас заполню!";
+            this.state = {
+                errorTitle: "Хей!",
+                errorMessage: "Забыл заполнить поля!",
+                errorType: "warning",
+                confirmText: "Упс! Сейчас заполню..."
+            };
             this.setState({showError: true});
         } else {
             setTimeout(this.login(this._login.value.toString(),this._password.value.toString(),3000));
@@ -38,14 +40,17 @@ export default class Login extends Component {
         request.send(`login=${login}&password=${pass}`);
 
         request.onreadystatechange = function () {
+            // Ждем завершения запроса
             if (request.readyState != 4) return;
             if (request.status != 200) {
                 console.log('Print error');
                 console.log(request.status + ': ' + request.statusText);
-                this.state.errorTitle = "Оу!";
-                this.state.errorMessage = `Нет такого пользователя`;
-                this.state.errorType = "error";
-                this.state.confirmText = "Окей";
+                this.state = {
+                    errorTitle: "Оу!",
+                    errorMessage: "Нет такого пользователя!",
+                    errorType: "error",
+                    confirmText: "Окей"
+                };
                 this.setState({showError: true});
             } else {
                 this.setState({isSuccess:true},() => {console.log('Auth complete!')});

@@ -26,18 +26,14 @@ export default class DashBoard extends Component {
 
     toggleTask(e) {
         //toggle isDone boolean
-        console.log(e.target.name);
+        // console.log(e.target.name);
         let newItems = this.state.items;
         for(let i = 0; i < newItems.length; i++) {
             if(newItems[i].name == e.target.name) {
                 let _state = newItems[i].isDone;
                 newItems[i].isDone = !newItems[i].isDone;
                 this.setState({items:newItems});
-                if(!_state) {
-                    this.sync(localStorage.user, localStorage.token, 'done', e.target.name);
-                } else {
-                    this.sync(localStorage.user, localStorage.token, 'cancel', e.target.name);    
-                }
+                this.sync(localStorage.user, localStorage.token, !_state?'done':'cancel', e.target.name);
             }
         }
     }
@@ -51,7 +47,7 @@ export default class DashBoard extends Component {
     }
 
     onUnload(event) {
-        console.log("sync");
+        // console.log("sync");
         //event.returnValue = "random_value";
     }
 
@@ -74,10 +70,12 @@ export default class DashBoard extends Component {
         } else {
             this.setState({task: ''});
             document.getElementById('task').value = "";
-            this.state.errorTitle = "Тише, тише";
-            this.state.errorMessage = "Попробуй уместить все в 140 символов.";
-            this.state.errorType = "warning";
-            this.state.confirmText = "Окей, попробую.";
+            this.state = {
+                errorTitle: "Тише, тише",
+                errorMessage: "Попробуй уместить все в 140 символов.",
+                errorType: "warning",
+                confirmText: "Ладно, уговорил"
+            };
             this.setState({showError: true});
         }
     };
@@ -85,9 +83,9 @@ export default class DashBoard extends Component {
     addTask(e){
         let currentTask = this.state.task;
         if(currentTask) {
-        this.setState({
-            items: this.state.items.concat({"name":this.state.task,"isDone":false}),
-            task: ''
+            this.setState({
+                items: this.state.items.concat({"name":this.state.task,"isDone":false}),
+                task: ''
         });
 
         this.sync(localStorage.user,localStorage.token,'add', currentTask);
@@ -103,7 +101,7 @@ export default class DashBoard extends Component {
     };
 
     sync(user,token,type,data) {
-        console.log('SYNC!');
+        // console.log('SYNC!');
         let request = new XMLHttpRequest();
         request.open('POST', '/data', true);
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -112,13 +110,13 @@ export default class DashBoard extends Component {
         request.onreadystatechange = function () {
             if (request.readyState != 4) return;
             if (request.status != 200) {
-                console.log('Print error');
+                // console.log('Print error');
                 //Добавить на страницу что-нибудь, если автономный режим
-                console.log(request.status + ': ' + request.statusText);
+                // console.log(request.status + ': ' + request.statusText);
                 document.getElementsByClassName('nav-wrapper')[0].style.backgroundColor = "#FE5E57";
             } else {
                 let responce = JSON.parse(request.responseText);
-                console.log(responce);
+                // console.log(responce);
                 
                 localStorage.setItem('user', responce.username);
                 localStorage.setItem('tasks', JSON.stringify(responce.tasks));
