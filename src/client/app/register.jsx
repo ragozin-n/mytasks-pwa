@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import SweetAlert from 'sweetalert-react';
+import Navbar from './navbar';
 
 export default class Register extends Component {
 
@@ -60,7 +61,10 @@ export default class Register extends Component {
     }
 
     render() {
-        return <div className="row panel-info">
+        return (
+        <div>
+        <Navbar logo="Register to MyTasks"/>
+        <div className="row panel-info">
             <div className="col m4"></div>
             <div className="col m4">
                 <div className="card blue-grey darken-1">
@@ -96,5 +100,7 @@ export default class Register extends Component {
                 onConfirm={() => this.setState({showError: false})}
             />
         </div>
+        </div>
+        )
     }
 }

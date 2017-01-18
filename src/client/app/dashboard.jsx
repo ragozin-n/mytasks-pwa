@@ -3,7 +3,6 @@ import SweetAlert from 'sweetalert-react';
 import ReactInterval from 'react-interval';
 
 export default class DashBoard extends Component {
-
     constructor(props) {
         super(props);
         let items = JSON.parse(localStorage.tasks);
@@ -22,6 +21,8 @@ export default class DashBoard extends Component {
         this.onUnload = this.onUnload.bind(this);
         this.sync = this.sync.bind(this);
         this.toggleTask = this.toggleTask.bind(this);
+        
+        this.MAX_TASK_LENGTH = 50;
     };
 
     toggleTask(e) {
@@ -65,7 +66,8 @@ export default class DashBoard extends Component {
     };
 
     onChange(e) {
-        if(e.target.value.length < 140) {
+        //Переделать
+        if(e.target.value.length < this.MAX_TASK_LENGTH) {
             this.setState({ task: e.target.value });
         } else {
             this.setState({task: ''});
@@ -132,19 +134,19 @@ export default class DashBoard extends Component {
         return(
             <div className="container">
                 <div className="collection with-header col s6 offset-s4">
-                    <div className="collection-header center"><h4>Hello, {localStorage.user}</h4></div>
-                    <a className="collection-item addTaskItem center">
-                        <span>Add task:</span>
-                        <span className="input-field">
-                            <input id="task" onChange={this.onChange}/>
-                        </span>
-                        <span className="btn addTask" onClick={this.addTask}>+</span>
-                    </a>
+                    <div className="collection-header">
+                        <h4 className="center">Hello, {localStorage.user}</h4>
+                        <div className="input-field">
+                            <input id="task" type="text" maxLength={this.MAX_TASK_LENGTH} onChange={this.onChange}/>
+                            <label htmlFor="task">Введите задачу: </label>
+                        </div>
+                        <span className="btn addTask waves-effect waves-red" onClick={this.addTask}>+</span>
+                    </div>
                     {this.state.items.map((task, taskIndex) =>
                         <a name={task.name} key={taskIndex} onDoubleClick={this.toggleTask} className="collection-item">
                             {task.name} {task.isDone ? "(Done)" : "(Not done yet)"}
-                            <button className="delete-btn btn-flat" onClick={this.deleteTask}
-                                    value={taskIndex}> Delete </button>
+                            <button className="delete-btn waves-effect waves-red z-depth-1 btn-floating secondary-content" onClick={this.deleteTask}
+                                    value={taskIndex}> - </button>
                         </a>
                     )}
                 </div>

@@ -10,7 +10,7 @@ body {
 }
 
 .panel-info {
-  margin-top: 15%;
+  margin-top: 80px;
   min-width: 200px;
   opacity: 0.92;
   text-align: center;
@@ -39,19 +39,14 @@ body {
 .delete-btn {
   float: right;
   position: relative;
-  top: -7px;
+  top: -9px;
   margin: 0px;
 }
 
-.addTaskItem > span > input {
-  margin: 0px 15px !important;
-  height: 50% !important;
-  min-width: 300px !important;
-}
-.addTaskItem > span {
-  display: inline-flex;
-  justify-content:center;
-}
+// .addTaskItem > span {
+//   display: inline-flex;
+//   justify-content:center;
+// }
 
 .preloader-wrapper {
   position: absolute !important;
@@ -60,4 +55,25 @@ body {
   right: 0 !important;
   bottom: 0 !important;
   margin: auto !important;
+}
+
+.addTask {
+  float: right !important;
+  position: relative !important;
+}
+
+.input-field {
+  float: left !important;
+  width: 70% !important;
+  position: relative !important;
+  bottom: 20px !important;
+  margin-top: 5px !important;
+}
+
+.input-field > input {
+  margin: 0 !important;
+}
+
+.collection-header {
+  min-height: 120px;
 }

@@ -7,19 +7,20 @@
 
 ### Приложение использует:
 -	React
--	Redux
 -	Gulp
 -	Babel
 -	ES6
--	CSS3
+-	SCSS
 -	HTML5 Web Storage
--	Попробую освоить [Fetch](https://fetch.spec.whatwg.org)
+-	Попробую освоить [Fetch](https://fetch.spec.whatwg.org), но пока все на обычном XMLHttpRequest
 -	Python
 -	Pyramid
 -	PostgreSQL 
--	Попробую выгрузить на Heroku
+-	База данных + бот для телеграмма выгружены Heroku
+-	Сам проект выгружен на  с9.io
+-	Использован css фреймворк Materialcss
+-	Бот написан с помощью node-telegram-bot-api + Nodejs
 
-### Usage (on 17.12.2016):
-```
-gulp build && cd src; server/bin/python app.py
-```
+### Как посмотреть:
+-	[Посмотреть](http://mytasks-pwa-zxspectrum.c9users.io)
+-	[Через бота](http://t.me/mytasks_pwa_bot)

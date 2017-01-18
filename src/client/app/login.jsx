@@ -80,7 +80,10 @@ export default class Login extends Component {
                             </div>
                         </div>
                         <div className="card-action">
-                            <a className="btn enter waves-effect waves-light" onClick={this.verifyForm}>
+                            <a className="btn enter waves-effect waves-light tooltipped" 
+                            data-position="right" data-delay="50" 
+                            data-tooltip="Добро пожаловать!" 
+                            onClick={this.verifyForm}>
                                 Войти
                             </a>
                             <Link className="btn-flat reg waves-effect waves-light" to="/register">Регистрация</Link>
