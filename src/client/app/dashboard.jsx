@@ -22,6 +22,7 @@ export default class DashBoard extends Component {
         this.sync = this.sync.bind(this);
         this.toggleTask = this.toggleTask.bind(this);
         
+        this.sync(localStorage.user, localStorage.token, 'update', 0);
         this.MAX_TASK_LENGTH = 50;
     };
 
@@ -136,7 +137,7 @@ export default class DashBoard extends Component {
                 <div className="collection with-header col s6 offset-s4">
                     <div className="collection-header">
                         <h4 className="center">Hello, {localStorage.user}</h4>
-                        <div className="input-field">
+                        <div className="input-field taskinput">
                             <input id="task" type="text" maxLength={this.MAX_TASK_LENGTH} onChange={this.onChange}/>
                             <label htmlFor="task">Введите задачу: </label>
                         </div>
