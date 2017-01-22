@@ -109,14 +109,23 @@ export default class DashBoard extends Component {
         request.open('POST', '/data', true);
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         request.send(`user=${user}&token=${token}&type=${type}&data=${data}`);
+        const RETRY_LIMIT = 100;
 
         request.onreadystatechange = function () {
+            let retryCount = 0;
             if (request.readyState != 4) return;
             if (request.status != 200) {
                 // console.log('Print error');
                 //Добавить на страницу что-нибудь, если автономный режим
                 // console.log(request.status + ': ' + request.statusText);
                 document.getElementsByClassName('nav-wrapper')[0].style.backgroundColor = "#FE5E57";
+                if (retryCount < RETRY_LIMIT) {
+                    console.log(retryCount);
+                    setTimeout(() => {
+                        this.sync(user, token, type, data);
+                    },1000);
+                    retryCount++;
+                };
             } else {
                 let responce = JSON.parse(request.responseText);
                 // console.log(responce);
